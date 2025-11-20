@@ -4,6 +4,7 @@ import moment from 'moment';
 import { LoginRequest } from '../interface/users.interface';
 
 import { getUserData } from '../service/userData.service';
+import { isPasswordValid } from '../service/encrypt.service';
 import { generateToken } from '../midlewares/jwt.midlewares';
 
 import { Usuario } from '../model/user.model';
@@ -19,10 +20,15 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
             res.status(400).json({ message: 'Correo o contraseña incorrectos' });
             return;
         }
+        // Validar la contraseña
+        const passwordMatch = isPasswordValid(user.password, userData.password_hash);
+        if(!passwordMatch){
+            res.status(400).json({ message: 'Correo o contraseña incorrectos' });
+            return;
+        }
 
         // Generar el jwt
         const jwt = generateToken(userData.id_usuario, user.id_rol);
-        console.log('User data:', userData);
         // Actualizar el ultimo login del usuario
         const time = moment().format('YYYY-MM-DD HH:mm:ss');
         await Usuario.update({ last_log: time }, { where: { email: user.email } });
