@@ -38,8 +38,18 @@ export const fetchIndiciosByExpediente = async (req: Request, res: Response): Pr
     }
 
     try {
+        const result = await executeProcedure(PROCEDURES.INDICIOS_BY_EXPEDIENTE, {
+            id_expediente: { type: TYPES.Int, value: Number(id_expediente) }
+        });
 
-        res.status(200).json({ message: 'Indicios obtenidos correctamente', indicios: [] });
+        // Validar que se haya obtenido un resultado
+        if (!result || result.length === 0) {
+            res.status(500).json({ message: "No se devolvió ningún resultado desde el procedimiento." });
+        }
+        if (result[0].error) {
+            res.status(500).json({ message: "Error al listar indicios", error: result[0].error });
+        }
+        res.status(200).json({ message: 'Indicios obtenidos correctamente', indicios: result });
     } catch (error) {
         res.status(500).json({ message: 'Error al obtener los indicios', error });
     }
