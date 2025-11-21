@@ -8,6 +8,7 @@ import { isPasswordValid } from '../service/encrypt.service';
 import { generateToken } from '../midlewares/jwt.midlewares';
 
 import { Usuario } from '../model/user.model';
+import { Role } from '../enum/role.enum';
 
 // Validate login user
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
@@ -28,7 +29,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
         }
 
         // Generar el jwt
-        const jwt = generateToken(userData.id_usuario, user.id_rol);
+        const jwt = generateToken(userData.id_usuario, userData.id_rol);
         // Actualizar el ultimo login del usuario
         const time = moment().format('YYYY-MM-DD HH:mm:ss');
         await Usuario.update({ last_log: time }, { where: { email: user.email } });
