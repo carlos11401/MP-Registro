@@ -1,0 +1,312 @@
+# Manual Técnico
+
+**Fecha:** 2025-11-21  
+**Autor:** Carlos Javier Castro González
+
+---
+
+## 1. Introducción
+
+
+Este manual tiene como objetivo guiar al personal técnico a entender la estructura del sistem.
+
+---
+
+## 2. Arquitectura del Sistema
+
+**Descripción general:**  
+El sistema está compuesto por los siguientes componentes:
+
+- **Base de datos:** SQL Server
+- **Backend:** Node js - typescript  
+- **Frontend:** React
+- **Contenedores:** Docker / Docker Compose
+
+**Diagrama de arquitectura:**  
+![Diagrama de arquitectura](img/Arq.png)
+
+---
+
+## 3. Base de Datos
+
+**Modelo ER:**  
+![Diagrama ER](img/ER_MP.png)
+
+**Creación de tablas y relaciones:**  
+
+---
+
+### 1. Tabla `ROLES`
+
+**Propósito:** Almacenar los tipos de roles de los usuarios del sistema.  
+
+**Campos:**
+
+| Campo     | Tipo       | Descripción                       |
+|-----------|-----------|-----------------------------------|
+| id_rol    | INT       | Identificador único del rol       |
+| nombre    | VARCHAR   | Nombre del rol (ej. tecnico, coordinador) |
+
+**Relaciones:**  
+- `id_rol` se referencia en `USUARIOS.id_rol`.
+
+---
+
+### 2. Tabla `USUARIOS`
+
+**Propósito:** Registrar los usuarios del sistema.  
+
+**Campos:**
+
+| Campo           | Tipo        | Descripción                            |
+|-----------------|------------|----------------------------------------|
+| id_usuario       | INT        | Identificador único del usuario       |
+| nombre           | VARCHAR    | Nombre completo del usuario           |
+| email            | VARCHAR    | Correo electrónico del usuario        |
+| password         | VARBINARY  | Contraseña cifrada                     |
+| id_rol           | INT        | Rol asignado al usuario               |
+| estado           | BIT        | Estado activo (1) o inactivo (0)     |
+| fecha_creacion   | DATETIME   | Fecha de creación del usuario         |
+
+**Relaciones:**  
+- `id_rol` → `ROLES.id_rol`  
+- `id_usuario` se utiliza en `EXPEDIENTE`, `INDICIO`, `REVISION_EXPEDIENTE` y `LOG_ACCIONES`.
+
+---
+
+### 3. Tabla `EXPEDIENTE`
+
+**Propósito:** Almacenar los expedientes gestionados por los técnicos.  
+
+**Campos:**
+
+| Campo                | Tipo       | Descripción                                   |
+|---------------------|-----------|-----------------------------------------------|
+| id_expediente        | INT       | Identificador único del expediente           |
+| numero_expediente    | VARCHAR   | Número único del expediente                  |
+| descripcion          | VARCHAR   | Descripción del expediente                   |
+| fecha_registro       | DATETIME  | Fecha de registro                            |
+| id_tecnico_registro  | INT       | Técnico que registró el expediente          |
+| estado               | VARCHAR   | Estado del expediente (pendiente/aprobado/rechazado) |
+| fecha_aprobacion     | DATETIME  | Fecha de aprobación (si aplica)             |
+| fecha_rechazo        | DATETIME  | Fecha de rechazo (si aplica)                |
+
+**Relaciones:**  
+- `id_tecnico_registro` → `USUARIOS.id_usuario`  
+- `id_expediente` se utiliza en `INDICIO` y `REVISION_EXPEDIENTE`.
+
+---
+
+### 4. Tabla `INDICIO`
+
+**Propósito:** Registrar indicios relacionados a un expediente.  
+
+**Campos:**
+
+| Campo               | Tipo       | Descripción                       |
+|--------------------|-----------|-----------------------------------|
+| id_indicio          | INT       | Identificador único del indicio  |
+| id_expediente       | INT       | Expediente al que pertenece      |
+| descripcion         | VARCHAR   | Descripción del indicio          |
+| color               | VARCHAR   | Color del indicio                |
+| tamano              | VARCHAR   | Tamaño del indicio               |
+| peso                | VARCHAR   | Peso del indicio                 |
+| ubicacion           | VARCHAR   | Ubicación física del indicio     |
+| id_usuario_registro | INT       | Usuario que registró el indicio  |
+| fecha_registro      | DATETIME  | Fecha de registro                |
+
+**Relaciones:**  
+- `id_expediente` → `EXPEDIENTE.id_expediente`  
+- `id_usuario_registro` → `USUARIOS.id_usuario`
+
+---
+
+### 5. Tabla `REVISION_EXPEDIENTE`
+
+**Propósito:** Registrar las acciones de los coordinadores sobre los expedientes.  
+
+**Campos:**
+
+| Campo           | Tipo       | Descripción                       |
+|----------------|-----------|-----------------------------------|
+| id_revision      | INT       | Identificador único de la revisión |
+| id_expediente    | INT       | Expediente revisado               |
+| id_coordinador   | INT       | Coordinador que realizó la acción |
+| accion           | VARCHAR   | Acción tomada (aprobado/rechazado) |
+| justificacion    | VARCHAR   | Justificación en caso de rechazo  |
+| fecha_accion     | DATETIME  | Fecha de la acción               |
+
+**Relaciones:**  
+- `id_expediente` → `EXPEDIENTE.id_expediente`  
+- `id_coordinador` → `USUARIOS.id_usuario`
+
+---
+
+
+## Estructura del Backend
+
+El proyecto sigue una arquitectura organizada en módulos para mantener el código limpio, escalable y fácil de mantener.  
+A continuación se describen las carpetas más importantes dentro de `src/`:
+
+### config/
+Contiene los archivos de configuración del proyecto, como:
+- Conexiones a la base de datos.
+
+### controller/
+Incluye los controladores que reciben las peticiones HTTP donde se procesan los parámetros, validaciones básicas y el manejo de respuestas.
+
+### enum/
+Contiene enumeraciones (enums) utilizadas en distintas partes del sistema, como:
+- Roles.
+- Tipos definidos para evitar valores "quemados" en el código.
+
+### interface/
+Define las interfaces y tipos TypeScript utilizados por los modelos, servicios y controladores.  
+Permite tener un sistema fuertemente tipado y reducir errores durante el desarrollo.
+
+### midlewares/
+Agrupa los middlewares globales o específicos de rutas, por ejemplo:
+- Autenticación (JWT).
+- Validación de datos.
+
+### routes/
+Define las rutas del backend y asocia cada ruta con su respectivo controlador.  
+Es el punto donde se organiza la estructura del API.
+
+### service/
+Aquí se almacena la lógica de negocio.  
+Los servicios reciben llamadas desde los controladores y ejecutan operaciones más complejas, como:
+- Consultas a la base de datos.
+- Validaciones lógicas.
+
+### app.ts
+Configura el servidor Express: middlewares globales, rutas, JSON parser, CORS, etc.
+
+### index.ts
+Punto de entrada del sistema.  
+Inicializa el servidor y arranca la aplicación utilizando la configuración definida en `app.ts`.
+
+---
+
+### Otros archivos importantes fuera de `src/`
+
+### .env
+Archivo donde se almacenan las variables de entorno (puertos, credenciales, configuración del entorno).
+
+### dockerfile
+Define la imagen Docker para ejecutar el backend en contenedor.
+
+### tsconfig.json
+Configuración de TypeScript (paths, target, outDir, strict mode, etc.).
+
+### dist/
+Directorio generado automáticamente al compilar TypeScript a JavaScript.  
+Es el código que ejecuta Node en producción.
+
+---
+
+## Contenedorización con Docker
+
+El backend del sistema fue contenedorizado utilizando **Docker** para garantizar una ejecución consistente, aislada y fácil de desplegar en cualquier entorno.
+
+### Imagen y contenedor del backend
+El servicio del backend corre dentro de un contenedor basado en una imagen construida a partir del `dockerfile` ubicado en la raíz del proyecto.
+
+- **Lenguaje:** Node.js + TypeScript
+- **Puerto interno del contenedor:** 3000
+- **Puerto expuesto al host:** 3000
+
+La aplicación se ejecuta desde los archivos compilados en el directorio `dist/`.
+
+### Manejo de variables sensibles
+Para evitar exponer datos sensibles (como credenciales de base de datos, secretos JWT, puertos y configuraciones internas), se utilizó un archivo `.env` que no se incluye en el repositorio.
+
+Variables importantes definidas en `.env`:
+- `DB_HOST`
+- `DB_USER`
+- `DB_PASSWORD`
+- `DB_NAME`
+- `PORT`
+- `JWT_SECRET`
+
+Estas variables se cargan automáticamente dentro del contenedor mediante:
+```bash
+--env-file .env
+```
+
+## Configuración con Docker Compose
+
+El proyecto utiliza **Docker Compose** para levantar de forma conjunta dos servicios principales:  
+1. La base de datos **SQL Server 2022**  
+2. El backend desarrollado en **Node.js/TypeScript**
+
+Esto permite que ambos servicios se ejecuten en contenedores separados pero comunicándose a través de una misma red interna.
+
+---
+
+### Estructura general del `docker-compose.yml`
+
+```yaml
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mi_sql_server
+    environment:
+      SA_PASSWORD: "${DB_PASS}"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - mi_red
+    volumes:
+      - db_data:/var/opt/mssql
+
+  backend:
+    build: ./backend
+    depends_on:
+      - db
+    container_name: mi_backend
+    env_file:
+      - ./backend/.env
+    ports:
+      - "3000:3000"
+    networks:
+      - mi_red
+
+networks:
+  mi_red:
+    driver: bridge
+
+volumes:
+  db_data:
+```
+
+### Puntos clave del archivo `docker-compose.yml`
+
+#### Servicio **db** (SQL Server 2022)
+Utiliza la imagen oficial de SQL Server 2022 y obtiene la contraseña del usuario SA desde una variable de entorno definida en el archivo `.env`, lo que permite proteger credenciales sensibles. Este servicio expone el puerto 1433 para permitir conexiones externas y mantiene la persistencia de los datos mediante el volumen `db_data`. Además, forma parte de la red interna `mi_red`, lo que facilita la comunicación directa con el backend.
+
+#### Servicio **backend**
+Se construye a partir del Dockerfile ubicado en la carpeta `./backend`. Declara una dependencia hacia el servicio de base de datos para asegurar que SQL Server esté disponible antes de iniciar la aplicación. Las configuraciones y credenciales se cargan desde el archivo `.env`, ubicado dentro del mismo backend, evitando incluir información sensible dentro del compose. El servicio expone el puerto 3000 para acceder al API y se integra a la red interna `mi_red` para comunicarse directamente con la base de datos.
+
+#### Red interna `mi_red`
+La red interna **mi_red** está configurada como una red tipo bridge y permite que ambos servicios se comuniquen entre sí mediante sus nombres de servicio, eliminando la necesidad de utilizar direcciones IP y facilitando la configuración interna del sistema.
+
+#### Volumen `db_data`
+El volumen **db_data** se utiliza para almacenar la información persistente de SQL Server. Esto garantiza que los datos se mantengan aunque el contenedor sea eliminado o reconstruido.
+
+---
+
+## Pruebas del API con Postman
+
+Las pruebas del backend fueron realizadas utilizando **Postman**, donde se creó una colección completa que incluye:
+
+- Todas las rutas del sistema clasificadas por módulos.
+- Ejemplos de solicitudes y respuestas.
+- Descripciones de cada endpoint.
+- Pruebas básicas de autenticación y escenarios comunes del sistema.
+
+Postman generó automáticamente una documentación navegable donde se puede consultar cada endpoint en detalle.
+
+[**Documentación completa de la API (Postman)** ](https://documenter.getpostman.com/view/23185315/2sB3dHVCUi)
+
