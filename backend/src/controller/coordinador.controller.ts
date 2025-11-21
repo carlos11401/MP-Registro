@@ -1,13 +1,28 @@
 import { Request, Response } from 'express';
 import { ESTADO } from '../enum/estado.enum';
-import { Sequelize } from 'sequelize';
+import { PROCEDURES } from '../enum/procedures.enum';
+import { executeProcedure } from '../config/procedure.config';
+import { TYPES } from 'tedious';
 
 export const listarExpedientes = async (req: Request, res: Response) => {
     try {
+        const estado = req.query.estado || null;
+        const id_tecnico = req.query.id_tecnico ? Number(req.query.id_tecnico) : null;
 
+        const result = await executeProcedure(PROCEDURES.LIST_EXPEDIENTES, {
+            estado: { type: TYPES.VarChar, value: estado },
+            id_tecnico: { type: TYPES.Int, value: id_tecnico }
+        });
 
+        // Validar que se haya obtenido un resultado
+        if (!result || result.length === 0) {
+            res.status(500).json({ message: "No se devolvió ningún resultado desde el procedimiento." });
+        }
+        if (result[0].error) {
+            res.status(500).json({ message: "Error al listar expedientes", error: result[0].error });
+        }
 
-        res.status(200).json("asdfasdfa");
+        res.status(200).json(result);
     } catch (error) {
         res.status(500).json({ message: 'Error al obtener expedientes', error });
     }
