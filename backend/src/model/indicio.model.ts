@@ -2,7 +2,6 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 import { sequelize } from '../config/db.config';
 import { DBTables } from '../enum/table.enum';
 
-
 export class Indicio extends Model {
     declare id_indicio: number;
     declare id_expediente: number;
