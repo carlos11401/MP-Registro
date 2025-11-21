@@ -69,3 +69,30 @@ export const aprobarExpedienteController = async (req: Request, res: Response) =
         res.status(500).json({ message: error.message });
     }
 };
+
+export const rechazarExpedienteController = async (req: Request, res: Response) => {
+    const id_expediente = req.body.id_expediente ;
+    const idCoordinador = req.user?.id;
+    const justificacion = req.body.justificacion || '';
+
+    try {
+        const result = await executeProcedure(PROCEDURES.RECHAZAR_EXPEDIENTE, {
+            id_expediente: { type: TYPES.Int, value: Number(id_expediente) },
+            id_coordinador: { type: TYPES.Int, value: idCoordinador },
+            justificacion: { type: TYPES.VarChar, value: justificacion }
+        });
+
+        // Validar que se haya obtenido un resultado
+        if (!result || result.length === 0) {
+            res.status(500).json({ message: "No se devolvió ningún resultado desde el procedimiento." });
+        }
+        if (result[0].error) {
+            res.status(500).json({ message: "Error al rechazar expediente", error: result[0].error });
+        }
+
+        res.status(200).json({ message: 'Expediente rechazado correctamente' });
+    } catch (error: any) {
+        console.error('Error al rechazar expediente:', error);
+        res.status(500).json({ message: error.message });
+    }
+};

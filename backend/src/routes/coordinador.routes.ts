@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { authenticateToken } from '../midlewares/jwt.midlewares';
 import { Role } from '../enum/role.enum';
-import { listarExpedientes } from '../controller/coordinador.controller';
+import { listarExpedientes, rechazarExpedienteController } from '../controller/coordinador.controller';
 import { fetchIndiciosByExpediente } from '../controller/coordinador.controller';
 import { aprobarExpedienteController } from '../controller/coordinador.controller';
 
@@ -12,5 +12,6 @@ router.get('/expedientes', authenticateToken([Role.Coordinador]), listarExpedien
 router.get('/expediente/:id_expediente/indicios', authenticateToken([Role.Coordinador]), fetchIndiciosByExpediente);
 
 router.post('/expediente/aprobar', authenticateToken([Role.Coordinador]), aprobarExpedienteController);
+router.post('/expediente/rechazar', authenticateToken([Role.Coordinador]), rechazarExpedienteController);
 
 export default router;

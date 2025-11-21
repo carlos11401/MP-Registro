@@ -4,5 +4,6 @@ export enum PROCEDURES {
     ADD_EXPEDIENTE = "sp_crear_expediente",
     ADD_INDICIO = "sp_crear_indicio",
     LIST_EXPEDIENTES = "sp_listar_expedientes",
-    APROBAR_EXPEDIENTE = "sp_aprobar_expediente"
+    APROBAR_EXPEDIENTE = "sp_aprobar_expediente",
+    RECHAZAR_EXPEDIENTE = "sp_rechazar_expediente"
 }
