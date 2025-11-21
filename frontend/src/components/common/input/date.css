@@ -1,0 +1,55 @@
+.date-input-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.date-label {
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+.date-label.white{
+  color: white;
+}
+.date-label:not(.white) {
+  color: #838383;
+}
+
+.date-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  position: relative;
+}
+.date-wrapper.white{
+  background-color: white;
+}
+.date-wrapper:not(.white) {
+  color: #838383;
+}
+
+.date-input {
+  color: #656565;
+  appearance: none;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  width: 100%;
+  background: transparent;
+  cursor: pointer;
+}
+.date-input.white{
+  /* color: white; */
+  background-color: white;
+}
+
+
+.date-icon {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+  font-size: 20px;
+  color: #838383;
+}

@@ -1,0 +1,20 @@
+.divider {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 10px 0; /* Adjust the margin as needed */
+}
+
+.divider-line {
+  flex-grow: 1;
+  height: 1px;
+  background-color: #666666; /* Line color */
+}
+
+.divider-text {
+  margin: 0 10px;
+  color: #888; /* Text color */
+  font-size: 14px; /* Adjust text size */
+  white-space: nowrap; /* Prevent text from wrapping */
+}

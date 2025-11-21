@@ -1,0 +1,23 @@
+.sgn-container{
+  height: 85%;
+  width: 50%;
+  background-color: white;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.sgn-body{
+  width: 80%;
+  height: 80%;
+
+  display: flex;
+}
+.sgn-side{
+  width: 40%;
+  height: 100%;
+  padding: 20px;
+}
+

@@ -1,0 +1,33 @@
+.sdb-container {
+  width: 100%;
+  height: 100%;
+  background-color: #2A2A2A;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.sdb-header{
+  width: 80%;
+  height: 10%;
+  display: flex;
+  align-items: center;
+}
+.sdb-options{
+  width: 80%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content:start;
+}
+.sdb-footer{
+  width: 80%;
+  height: 10%;
+  display: flex;
+}
+.sdb-label{
+  font-size:larger;
+  font-weight: bold;
+  margin-left: 15px;
+}

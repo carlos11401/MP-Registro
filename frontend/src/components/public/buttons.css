@@ -1,0 +1,49 @@
+.normal-button {
+  width: 100%;
+  background-color: #bfbfbf; /* Color de fondo gris */
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 50px; /* Bordes redondeados */
+  font-size: 18px; /* Tamaño del texto */
+  cursor: pointer; /* Cambia el cursor a mano cuando pasas por encima */
+  text-align: center; /* Centra el texto */
+  transition: 0.3s; /* Suaviza la transición de color de fondo */
+}
+/* Efecto al pasar el cursor */
+.normal-button:hover {
+  background-color: #838383; /* Cambia a un gris más oscuro al pasar el cursor */
+}
+
+/* Button para usar en el home */
+.continue-button {
+  width: 100%;
+  background-color: #696969; /* Color de fondo gris */
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 50px; /* Bordes redondeados */
+  font-size: 18px; /* Tamaño del texto */
+  cursor: pointer; /* Cambia el cursor a mano cuando pasas por encima */
+  text-align: center; /* Centra el texto */
+  transition: 0.3s; /* Suaviza la transición de color de fondo */
+}
+/* Efecto al pasar el cursor */
+.continue-button:hover {
+  background-color: #444444; /* Cambia a un gris más oscuro al pasar el cursor */
+}
+
+/* Button para usar en el home */
+.cancel-button {
+  width: 100%;
+  background-color: #604C4C; /* Color de fondo gris */
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 50px; /* Bordes redondeados */
+  font-size: 18px; /* Tamaño del texto */
+  cursor: pointer; /* Cambia el cursor a mano cuando pasas por encima */
+  text-align: center; /* Centra el texto */
+  transition: 0.3s; /* Suaviza la transición de color de fondo */
+}
+/* Efecto al pasar el cursor */
+.cancel-button:hover {
+  background-color: #7a6262; /* Cambia a un gris más oscuro al pasar el cursor */
+}

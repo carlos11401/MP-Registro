@@ -1,0 +1,37 @@
+/* Estilos para el contenedor principal */
+.inpchk-container {
+  /* padding: 20px;              Espaciado interno */
+  border-radius: 10px;         /* Bordes redondeados */
+  color: white;                /* Color de texto blanco */
+  width: 200px;            /* Ancho máximo */
+  /* margin: 0 auto;              Centrar el componente */
+}
+
+/* Estilos para la etiqueta del checkbox */
+.inpchk-label {
+  font-size: 16px;             /* Tamaño del texto */
+  display: flex;
+  align-items: center;
+  gap: 10px;                   /* Espaciado entre el checkbox y el texto */
+}
+
+/* Estilos para el textarea */
+.inpchk-textarea {
+  width: 90%;                 /* Ocupa todo el ancho disponible */
+  margin-top: 10px;            /* Espaciado superior */
+  padding: 10px;               /* Espaciado interno */
+  border-radius: 10px;         /* Bordes redondeados */
+  background-color: white;     /* Fondo blanco */
+  color: black;                /* Texto negro */
+  font-size: 16px;             /* Tamaño del texto */
+  resize: none;                /* Desactivar la opción de redimensionar */
+  border: 1px solid #ccc;      /* Borde */
+  height: 100px;               /* Altura fija del textarea */
+  outline: none;
+}
+
+/* Añadir estilos para el textarea deshabilitado */
+.inpchk-textarea:disabled {
+  background-color: #e0e0e0;   /* Cambia el color de fondo cuando está deshabilitado */
+  color: #7a7a7a;              /* Color de texto cuando está deshabilitado */
+}

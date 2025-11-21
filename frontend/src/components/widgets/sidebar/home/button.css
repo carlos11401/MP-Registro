@@ -1,0 +1,32 @@
+.sdb-button-link {
+  width: 100%;
+  height: 50px;
+  text-decoration: none !important; 
+  margin-bottom: 15px;
+}
+
+.sdb-button-body{
+  height: 100%;
+  width: 100%;
+  border-radius: 5px;
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  /* element appears smoothly*/
+  transition: all 0.2s ease; 
+}
+.sdb-button-body.selected{
+  background-color: rgba(250, 249, 249, 0.395);
+  transform: scale(1.15);
+}
+.sdb-button-body:hover{
+  background-color: rgba(255, 255, 255, 0.237);
+  transform: scale(1.1);
+}
+
+.sdb-button-title{
+  font-weight: 400;
+  font-size: 13px;
+  margin-left: 15px;
+}
