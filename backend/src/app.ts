@@ -6,6 +6,7 @@ import "dotenv/config";
 
 import userRoutes from "./routes/user.routes";
 import coordinadorRoutes from "./routes/coordinador.routes";
+import tecnicoRoutes from "./routes/tecnico.routes";
 
 const app = express();
 
@@ -15,6 +16,6 @@ app.use(cors({ origin: process.env.CORS_ORIGIN }));
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(express.json()); // for parsing application/json
 
-app.use("/mp/v1/", userRoutes, coordinadorRoutes);
+app.use("/mp/v1/", userRoutes, tecnicoRoutes, coordinadorRoutes);
 
 export default app;
