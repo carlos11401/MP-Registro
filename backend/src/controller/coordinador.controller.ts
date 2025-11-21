@@ -28,7 +28,6 @@ export const listarExpedientes = async (req: Request, res: Response) => {
     }
 };
 
-
 export const fetchIndiciosByExpediente = async (req: Request, res: Response): Promise<void> => {
     const { id_expediente } = req.params;
 

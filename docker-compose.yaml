@@ -1,0 +1,32 @@
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mi_sql_server
+    environment:
+      SA_PASSWORD: "${DB_PASS}"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - mi_red
+    volumes:
+      - db_data:/var/opt/mssql
+
+  backend:
+    build: ./backend
+    depends_on:
+      - db
+    container_name: mi_backend
+    env_file:
+      - ./backend/.env
+    ports:
+      - "3000:3000"
+    networks:
+      - mi_red
+
+networks:
+  mi_red:
+    driver: bridge
+
+volumes:
+  db_data:
