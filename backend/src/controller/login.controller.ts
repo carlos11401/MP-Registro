@@ -3,12 +3,11 @@ import moment from 'moment';
 
 import { LoginRequest } from '../interface/users.interface';
 
-import { getUserData } from '../service/userData.service';
-import { isPasswordValid } from '../service/encrypt.service';
+import { executeProcedure } from '../config/procedure.config';
+
+import {  TYPES } from 'tedious/lib/data-type';
 import { generateToken } from '../midlewares/jwt.midlewares';
 
-import { Usuario } from '../model/user.model';
-import { Role } from '../enum/role.enum';
 
 // Validate login user
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
@@ -16,24 +15,18 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
     try {
         // Validar que el usuario este registrado
-        const userData = await getUserData(user);
-        if(!userData){
-            res.status(400).json({ message: 'Correo o contraseña incorrectos' });
-            return;
-        }
-        // Validar la contraseña
-        const passwordMatch = isPasswordValid(user.password, userData.password_hash);
-        if(!passwordMatch){
+        const userData = await executeProcedure("sp_login_usuario", {
+            email: { value: user.email , type: TYPES.VarChar },
+            password: { value: user.password , type: TYPES.VarChar }
+        });
+        if(userData.length == 0){
             res.status(400).json({ message: 'Correo o contraseña incorrectos' });
             return;
         }
 
-        // Generar el jwt
-        const jwt = generateToken(userData.id_usuario, userData.id_rol);
-        // Actualizar el ultimo login del usuario
-        const time = moment().format('YYYY-MM-DD HH:mm:ss');
-        await Usuario.update({ last_log: time }, { where: { email: user.email } });
-
+        // // Generar el jwt
+        const jwt = generateToken(userData[0].id_usuario, userData[0].id_rol);
+        
         res.status(200).json({ message: 'Inicio de sesión exitoso', token: jwt });
     } catch (error) {
         console.error(error);
