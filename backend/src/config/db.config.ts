@@ -32,6 +32,5 @@ export const dbConfig = {
 };
 
 export const createConnection = () => {
-    console.log("Creating DB connection...", process.env.DB_HOST);
     return new Connection(dbConfig);
 };

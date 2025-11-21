@@ -40,7 +40,6 @@ export const authenticateToken = (allowedRoles: Role[]) => {
 
             res.status(403).json({ message: 'Acceso denegado' });
         } catch (error) {
-            console.error(error);
             res.status(403).json({ message: 'Token no válido' });
         }
     }

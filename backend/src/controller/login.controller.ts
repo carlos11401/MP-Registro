@@ -20,7 +20,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
         });
         // Validar que se haya obtenido un resultado
         if (!result || result.length === 0) {
-            res.status(500).json({ message: "No se devolvió ningún resultado desde el procedimiento." });
+            res.status(500).json({ message: "Correo o contraseña incorrectos" });
         }
         if (result[0].error) {
             res.status(500).json({ message: "Error al iniciar sesión", error: result[0].error });
